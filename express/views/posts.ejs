@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="/css/style1.css">
+</head>
+
+<body>
+  <form action="/posts" method="POST">
+    <div>
+      <label>제목 :</label>
+      <input type="text" name="title">
+    </div>
+    <div>
+      <label>내용 :</label>
+      <input type="text" name="content">
+    </div>
+    <button type="submit">제출</button>
+    <!-- 꼭 submit 써야함 -->
+  </form>
+
+  <h1>글 목록</h1>
+  <h2>총 포스팅 수 <%= postsCounts %></h2>
+  <ul>
+    <% if(postsCounts > 0) { %>
+    <% for (let i = 0; i < postsCounts; i++) { %>
+    <li>
+      <p>제목: <%= POST[i].title %></p>
+      <p>내용: <%= POST[i].content %></p>
+      <a href="#" onclick="deletePost('<%= POST[i].title %>');">삭제</a>
+      <img src="./image/img<%=i+1 %>.jpg" alt="">
+
+    </li>
+
+    <% } } else { %>
+    <li>블로그 글이 없습니다.</li>
+    <% } %>
+  </ul>
+  <!-- <img src="./image/<%= imgName %>" alt="감자"> -->
+</body>
+
+<script>
+  function deletePost(title) {
+    console.log(title);
+    // 이 서버는 자기 위치를 알고 있으니까 http입력안해도 posts만써도 됨
+    fetch(`/posts/${title}`, {
+      method: 'delete',
+      headers: {
+        'Content-type': 'application/json'
+        // method랑 header 는데이터를 보내는 코드
+      },
+    }).then((res) => {
+      console.log(res);
+      location.reload();
+    })
+  }
+  // js파일 적게하기 위함
+</script>
+
+
+</html>

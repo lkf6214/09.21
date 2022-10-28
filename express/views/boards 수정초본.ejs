@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="/css/styleboard.css">
+</head>
+
+<body>
+  <h1>LKF BOARD</h1>
+  <h2>현재 등록 글 <%= postsCounts %></h2>
+
+
+  <div class="inner">
+    <div class="newpost_box">
+      <form action="/boards" method="POST" class="board_form">
+        <div class="form_title">
+          <h3>제목</h3>
+          <input type="text" name="title">
+        </div>
+        <div class="form_content">
+          <h3>내용</h3>
+          <input type="text" name="content">
+        </div>
+        <button type="submit">글 작성하기</button>
+        <!-- 꼭 submit 써야함 -->
+      </form>
+    </div>
+
+    <ul>
+      <% if(postsCounts > 0) { %>
+      <% for (let i = 0; i < postsCounts; i++) { %>
+      <li>
+        <div class="title"><%= POST[i].title %></div>
+        <div class="content"><%= POST[i].content %></div>
+        <div class="footer">
+          <a class="btn_modify" href="#">수정</a>
+          <a class="btn_delete" href="#" onclick="deletePosts('<%= POST[i].title %>');">삭제</a>
+        </div>
+      </li>
+
+      <% } } else { %>
+      <li>게시글이 없습니다.</li>
+      <% } %>
+    </ul>
+  </div>
+
+
+</body>
+
+<script>
+  function deletePost(title) {
+    console.log(title);
+    // 이 서버는 자기 위치를 알고 있으니까 http입력안해도 posts만써도 됨
+    fetch(`/posts/${title}`, {
+      method: 'delete',
+      headers: {
+        'Content-type': 'application/json'
+        // method랑 header 는데이터를 보내는 코드
+      },
+    }).then((res) => {
+      console.log(res);
+      location.reload();
+    })
+  }
+  // js파일 적게하기 위함
+</script>
+
+
+</html>

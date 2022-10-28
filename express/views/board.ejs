@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>borad</title>
+  <style>
+    @font-face {
+      font-family: 'GangwonEdu_OTFBoldA';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    * {
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #ffecb9;
+      font-family: 'GangwonEdu_OTFBoldA';
+    }
+
+    ul,
+    ol {
+      list-style: none;
+      padding: 0;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+
+
+    .btn {
+      padding: 10px 15px;
+      border-radius: 10px;
+      margin: 0 5px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    .btn.orange {
+      background-color: #62b299;
+      /* #cde59b; */
+    }
+
+    .btn.blue {
+      background-color: #90cdd2;
+    }
+
+    .btn.red {
+      background-color: coral;
+    }
+
+    .inner {
+      position: absolute;
+      width: 1200px;
+      height: 100vh;
+      left: 0;
+      right: 0;
+      margin: auto;
+      padding: 50px;
+    }
+
+    .inner .board_container {}
+
+    .inner .board_container .board_header {
+      text-align: center;
+    }
+
+    .inner .board_container .board_write {
+      margin-top: 30px;
+      text-align: right;
+    }
+
+    .inner .board_container .board_write span {
+      margin-right: 30px;
+      font-weight: bold;
+    }
+
+    .inner .board_container .board_body {
+      width: 100%;
+      margin-top: 50px;
+    }
+
+    .inner .board_container .board_body .board {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .inner .board_container .board_body .board li {
+      width: 100%;
+      border-radius: 30px;
+      border: 1px solid #999;
+      background-color: #fff;
+      margin-bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .inner .board_container .board_body .board li div {
+      margin: 20px 30px;
+    }
+
+    .inner .board_container .board_body .board li .title {
+      font-size: 28px;
+    }
+
+    .inner .board_container .board_body .board li .content {
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+
+<body>
+  <div class="inner">
+    <div class="board_container">
+      <div class="board_header">
+        <h1>BOARD </h1>
+      </div>
+      <div class="board_write">
+        <span>현재 등록 글 : &nbsp; <%= articleCounts %></span>
+        <a class="btn red" href="/board/write">글쓰기</a>
+        <a class="btn orange" href="/login/logout">로그아웃</a>
+      </div>
+      <div class="board_body">
+        <ul class="board">
+          <% if (articleCounts> 0) { %>
+          <% for(let i=0; i < articleCounts; i++) { %>
+          <li>
+            <div class="title">
+              작성자 <%= ARTICLE[i].userName ? ARTICLE[i].userName :  ARTICLE[i].id %>
+            </div>
+            <div class="title">
+              <%= ARTICLE[i].title %>
+            </div>
+            <div class="content">
+              <%= ARTICLE[i].content %>
+            </div>
+            <div class="img">
+              <!-- '='는 변수를 불러오는 거니까 빼야함 -->
+              <% if (ARTICLE[i].img != null) { %>
+              <img src="uploads/<%= ARTICLE[i].img %>" alt="img" width="500" />
+              <% } %>
+            </div>
+            <div class="foot">
+              <% if (ARTICLE[i].id ===userId) { %>
+              <a class="btn orange" href="board/modify/title/<%= ARTICLE[i].title %>">수정</a>
+              <a class="btn blue" href="#" onclick="deleteArticle('<%= ARTICLE[i].title %>')">삭제</a>
+              <% } %>
+            </div>
+          </li>
+          <% } %>
+          <% } else { %>
+          <li>
+            <div class="title">글이 없습니다🙂</div>
+            <% } %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+  function deleteArticle(title) {
+    fetch(`board/delete/title/${title}`, {
+      method: 'delete',
+      headers: {
+        'Content-type': 'application/json'
+      },
+    }).then((res) => {
+      location.href = '/board';
+    })
+  }
+</script>
+
+
+</html>

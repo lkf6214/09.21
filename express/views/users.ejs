@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+<body>
+  <form action="/users" method="POST">
+    <div>
+      <label>아이디 :</label>
+      <input type="text" name="id">
+    </div>
+    <div>
+      <label>이름 :</label>
+      <input type="text" name="name">
+    </div>
+    <div>
+      <label>email :</label>
+      <input type="email" name="email">
+      <!-- 텍스트 자체에서 @ 이메일 형식이 안나오면 경고문 띄어줌 -->
+    </div>
+    <button type="submit">제출</button>
+    <!-- 꼭 submit 써야함 -->
+  </form>
+
+  <h1>회원 목록</h1>
+  <h2>총 회원 수 <%= userCounts %></h2>
+  <ul>
+    <% if(userCounts > 0) { %>
+    <% for (let i = 0; i < userCounts; i++) { %>
+    <li>
+      <p>ID: <%= USER[i].id %></p>
+      <p>이름: <%= USER[i].name %></p>
+      <p>email: <%= USER[i].email %></p>
+      <a href="#" onclick="deleteUser('<%= USER[i].id %>');">삭제</a>
+      <!-- # 넣으면 새로고침이 안돼 -->
+      <img src="./image/img<%=i+1 %>.jpg" alt="">
+
+    </li>
+
+    <% } } else { %>
+    <li>회원 정보가 없습니다.</li>
+    <% } %>
+  </ul>
+  <!-- <img src="./image/<%= imgName %>" alt="감자"> -->
+</body>
+
+<script>
+  function deleteUser(id) {
+    console.log(id);
+    fetch(`/users/${id}`, {
+      method: 'delete',
+      headers: {
+        'Content-type': 'application/json'
+        // method랑 header 는데이터를 보내는 코드
+      },
+    }).then((res) => {
+      console.log(res);
+      location.reload();
+    })
+  }
+  // js파일 적게하기 위함
+</script>
+
+</html>

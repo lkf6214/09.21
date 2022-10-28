@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>채팅 서비스</title>
+</head>
+
+<body>
+  <input type="text" id="msg" />
+  <a href="javascript:void(0);" onclick="send()">전송</a>
+  <ol id="chat"></ol>
+</body>
+<script>
+  // 웹소켓 전역 객체 생성, 7777 은 WebSocket이 점령한다~~
+  let ws = new WebSocket("ws://localhost:7777");
+
+  const inputEl = document.getElementById('msg');
+  const chat = document.getElementById('chat');
+
+  function send() {
+    const message = inputEl.value;
+    ws.send(message);
+    inputEl.value = '';
+  }
+
+  ws.onmessage = (event) => {
+    const msgEl = document.createElement('li')
+    console.log(event.data);
+    msgEl.innerHTML = event.data.toString();
+    chat.appendChild(msgEl)
+  }
+
+  //   // 연결이 수립되면 서버에 메시지를 전송한다
+  //   ws.onopen = (event) => {
+  //     ws.send("저는 클라이언트에요. 안녕하세요🤗")
+  //   }
+
+  //   // 서버로 부터 메시지를 수신한다
+  //   ws.onmessage = () => {
+  //     console.log("서버님이 말하셨어요😎 ", event.data)
+  //   }
+
+  //   // 에러 발생 시 메세지 띄우기
+  //   ws.onerror = (event) => {
+  //     console.log("error가 났어요😥")
+  //   }
+</script>
+
+</html>
